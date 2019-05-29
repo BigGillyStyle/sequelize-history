@@ -25,28 +25,19 @@ const merge = require('lodash/merge');
  */
 class SequelizeHistory {
 	constructor(model, sequelize, options) {
-		this.options = Object.assign({},
-			SequelizeHistory.DEFAULTS,
-			options || {});
+		this.options = Object.assign({}, SequelizeHistory.DEFAULTS, options || {});
 
 		this.model = model;
 
 		// Create name of tracking model by appending
 		// suffice option to the tracked model name
-		this.modelName = [
-			this.model.name,
-			this.options.modelSuffix
-		].join('');
+		this.modelName = [this.model.name, this.options.modelSuffix].join('');
 
 		// Create the tracking model's schema
-		this.fields = this.createSchema(
-			sequelize.Sequelize);
+		this.fields = this.createSchema(sequelize.Sequelize);
 
 		// Register the tracking model with Sequelize
-		sequelize.define(
-			this.modelName,
-			this.setAttributes(),
-			{});
+		sequelize.define(this.modelName, this.setAttributes(), {});
 
 		// Store reference to the newly created tracking model
 		this.modelHistory = sequelize.models[this.modelName];
@@ -82,7 +73,7 @@ class SequelizeHistory {
 	addModelAuthorSetter(sequelize) {
 		const modelName = this.model.name;
 
-		sequelize.models[modelName].setRevisingAuthor = function (value) {
+		sequelize.models[modelName].setRevisingAuthor = function(value) {
 			sequelize.models[modelName]._sequelizeHistoryProps = {
 				_authorId: value
 			};
@@ -120,8 +111,7 @@ class SequelizeHistory {
 			});
 
 			// Remove the default behavior of auto-updating the timestamps...
-			if (f.fieldName === 'createdAt' ||
-				f.fieldName === 'updatedAt') {
+			if (f.fieldName === 'createdAt' || f.fieldName === 'updatedAt') {
 				delete f.defaultValue;
 			}
 
@@ -176,12 +166,12 @@ class SequelizeHistory {
 	 * @return {null}
 	 */
 	hookup() {
-		this.model.hook('beforeUpdate', this.insertHook.bind(this));
-		this.model.hook('beforeDestroy', this.insertHook.bind(this));
-		this.model.hook('beforeBulkUpdate', this.insertBulkHook.bind(this));
-		this.model.hook('beforeBulkDestroy', this.insertBulkHook.bind(this));
-		this.modelHistory.hook('beforeUpdate', this.readOnlyHook.bind(this));
-		this.modelHistory.hook('beforeDestroy', this.readOnlyHook.bind(this));
+		this.model.addHook('beforeUpdate', this.insertHook.bind(this));
+		this.model.addHook('beforeDestroy', this.insertHook.bind(this));
+		this.model.addHook('beforeBulkUpdate', this.insertBulkHook.bind(this));
+		this.model.addHook('beforeBulkDestroy', this.insertBulkHook.bind(this));
+		this.modelHistory.addHook('beforeUpdate', this.readOnlyHook.bind(this));
+		this.modelHistory.addHook('beforeDestroy', this.readOnlyHook.bind(this));
 	}
 
 	/**
@@ -207,8 +197,7 @@ class SequelizeHistory {
 
 		// Grab the static revision author property from the tracked class
 		// and null it out after its first use when called via an instance
-		if (typeof this.options.authorFieldName === 'string' &&
-			typeof this.model._sequelizeHistoryProps !== 'undefined') {
+		if (typeof this.options.authorFieldName === 'string' && typeof this.model._sequelizeHistoryProps !== 'undefined') {
 			dataValues[this.options.authorFieldName] = this.model._sequelizeHistoryProps._authorId;
 			this.model._sequelizeHistoryProps._authorId = null;
 		}
@@ -229,36 +218,39 @@ class SequelizeHistory {
 	 */
 	insertBulkHook(options) {
 		if (!options.individualHooks) {
-			const queryAll = this.model.findAll({
-				where: options.where,
-				transaction: options.transaction
-			}).then(hits => {
-				if (hits !== null) {
-					const docs = hits.map(hit => {
-						const dataSet = cloneDeep(hit.dataValues);
+			const queryAll = this.model
+				.findAll({
+					where: options.where,
+					transaction: options.transaction
+				})
+				.then(hits => {
+					if (hits !== null) {
+						const docs = hits.map(hit => {
+							const dataSet = cloneDeep(hit.dataValues);
 
-						// Grab the static revision author property from the tracked class
-						if (typeof this.options.authorFieldName === 'string' &&
-							typeof this.model._sequelizeHistoryProps !== 'undefined') {
-							dataSet[this.options.authorFieldName] = this.model._sequelizeHistoryProps._authorId;
+							// Grab the static revision author property from the tracked class
+							if (
+								typeof this.options.authorFieldName === 'string' &&
+								typeof this.model._sequelizeHistoryProps !== 'undefined'
+							) {
+								dataSet[this.options.authorFieldName] = this.model._sequelizeHistoryProps._authorId;
+							}
+
+							dataSet.modelId = hit.id;
+							delete dataSet.id;
+							return dataSet;
+						});
+
+						// ...and null it out after all bulk updates are complete
+						if (typeof this.options.authorFieldName === 'string' && typeof this.model._sequelizeHistoryProps !== 'undefined') {
+							this.model._sequelizeHistoryProps._authorId = null;
 						}
 
-						dataSet.modelId = hit.id;
-						delete dataSet.id;
-						return dataSet;
-					});
-
-					// ...and null it out after all bulk updates are complete
-					if (typeof this.options.authorFieldName === 'string' &&
-						typeof this.model._sequelizeHistoryProps !== 'undefined') {
-						this.model._sequelizeHistoryProps._authorId = null;
+						return this.modelHistory.bulkCreate(docs, {
+							transaction: options.transaction
+						});
 					}
-
-					return this.modelHistory.bulkCreate(docs, {
-						transaction: options.transaction
-					});
-				}
-			});
+				});
 
 			return queryAll;
 		}
@@ -314,8 +306,7 @@ SequelizeHistory.DEFAULTS = {
  * @return {object} - returns the tracked model and generated tracking model
  */
 module.exports = (model, sequelize, options) => {
-	const instance = new SequelizeHistory(
-		model, sequelize, options);
+	const instance = new SequelizeHistory(model, sequelize, options);
 
 	return instance.modelHistory;
 };
@@ -344,8 +335,7 @@ module.exports.all = (sequelize, options) => {
 	const names = Object.keys(sequelize.models);
 
 	names.forEach(key => {
-		const instance = new SequelizeHistory(
-			sequelize.models[key], sequelize, options);
+		const instance = new SequelizeHistory(sequelize.models[key], sequelize, options);
 
 		instances[instance.modelName] = instance;
 	});
