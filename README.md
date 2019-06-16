@@ -1,4 +1,4 @@
-![100% test coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)
+[![CircleCI](https://circleci.com/gh/BigGillyStyle/sequelize-history.svg?style=svg)](https://circleci.com/gh/BigGillyStyle/sequelize-history)
 
 # sequelize-history
 > Creates a revision history for instances of a given Sequelize model.
@@ -7,7 +7,7 @@ This module will setup automatic revision tracking for any [Sequelize](https://g
 This is effectively a re-write of [`sequelize-temporal`](https://github.com/bonaval/sequelize-temporal), which deserves any and all due credit.
 More specifically...
 
-- re-written in ES6-_ish_ code 
+- re-written in ES6-_ish_ code
 - addition of a couple of factory methods to make instantiation simpler (this is especially true if you're going to track revisions on all of your models)
 - optionally tracks revision author
 - a few new instantiation options
@@ -52,8 +52,8 @@ const ModelHistory = sequelizeHistory(Model, sequelize);
 // Otherwise...
 sequelizeHistory(Model, sequelize);
 
-// You're done. 
-// A record of all changes to instances of 
+// You're done.
+// A record of all changes to instances of
 // `Model` will be recorded in the modelHistory table via the
 // `ModelHistory` collection.
 ```
