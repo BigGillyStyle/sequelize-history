@@ -1,7 +1,7 @@
 {
   "name": "@biggillystyle/sequelize-history",
   "description": "Creates a revision history for instances of a given Sequelize model.",
-  "author": "tyler peterson <tylerjpeterson@gmail.com>",
+  "author": "Andy Pickler <andy.pickler@gmail.com>",
   "version": "1.3.2",
   "main": "index.js",
   "scripts": {
@@ -24,13 +24,13 @@
     "xo": "^0.18.2"
   },
   "bugs": {
-    "url": "https://github.com/tylerjpeterson/sequelize-history/issues"
+    "url": "https://github.com/BigGillyStyle/sequelize-history/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tylerjpeterson/sequelize-history.git"
+    "url": "https://github.com/BigGillyStyle/sequelize-history.git"
   },
-  "homepage": "https://github.com/tylerjpeterson/sequelize-history",
+  "homepage": "https://github.com/BigGillyStyle/sequelize-history",
   "contributors": [
     ""
   ],
