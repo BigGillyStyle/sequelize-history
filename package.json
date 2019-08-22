@@ -9,10 +9,13 @@
     "report": "istanbul report --root coverage lcov && open coverage/lcov-report/index.html",
     "lint": "xo ./index.js || true && xo ./test/spec/test.js || true",
     "docs": "jsdoc index.js -p -c .jsdoc.json -d docs/",
-    "test": "node test/spec/test.js | tap-spec"
+    "test": "node test/spec/test.js | tap-spec",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "nyc": "^14.1.1",
@@ -52,5 +55,6 @@
   "license": "MIT",
   "directories": {
     "test": "test"
-  }
+  },
+  "snyk": true
 }
