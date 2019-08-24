@@ -18,13 +18,13 @@
     "snyk": "^1.217.3"
   },
   "devDependencies": {
+    "jsdoc": "^3.6.3",
     "nyc": "^14.1.1",
-    "jsdoc": "^3.5.4",
-    "sequelize": "^4.23.4",
-    "sqlite3": "^4.0.9",
+    "sequelize": "^4.44.3",
+    "sqlite3": "^4.1.0",
     "tap-spec": "^5.0.0",
-    "tape": "^4.10.2",
-    "xo": "^0.18.2"
+    "tape": "^4.11.0",
+    "xo": "^0.24.0"
   },
   "bugs": {
     "url": "https://github.com/BigGillyStyle/sequelize-history/issues"
