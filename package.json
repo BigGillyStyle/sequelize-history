@@ -2,7 +2,7 @@
   "name": "@biggillystyle/sequelize-history",
   "description": "Creates a revision history for instances of a given Sequelize model.",
   "author": "Andy Pickler <andy.pickler@gmail.com>",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "main": "index.js",
   "scripts": {
     "coverage": "nyc npm run test",
