@@ -1,4 +1,5 @@
-[![CircleCI](https://circleci.com/gh/BigGillyStyle/sequelize-history.svg?style=svg)](https://circleci.com/gh/BigGillyStyle/sequelize-history)
+[![CircleCI](https://circleci.com/gh/BigGillyStyle/sequelize-history.svg?style=svg)](https://circleci.com/gh/BigGillyStyle/sequelize-history)    
+[![Known Vulnerabilities](https://snyk.io//test/github/BigGillyStyle/sequelize-history/badge.svg?targetFile=package.json)](https://snyk.io//test/github/BigGillyStyle/sequelize-history?targetFile=package.json)
 
 # sequelize-history
 > Creates a revision history for instances of a given Sequelize model.
